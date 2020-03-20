@@ -61,7 +61,30 @@ const selectCity = (event, input, list) => {
     input.value = target.textContent;
     list.textContent = '';
   }
-}
+};
+
+const renderCheapDay = (cheapTicket) => {
+  console.log(cheapTicket);
+};
+
+const renderCheapYear = (cheapTickets) => {
+  console.log(cheapTickets);
+};
+
+const renderCheap = (data, date) => {
+  const cheapTicketYear = JSON.parse(data).best_prices;
+    
+  const cheapTicketDay = cheapTicketYear.filter((item) => {
+    return item.depart_date === date;
+  });
+
+  renderCheapDay(cheapTicketDay);
+  renderCheapYear(cheapTicketYear);
+
+  console.log('cheapTicketYear: ', cheapTicketYear);
+  console.log('cheapTicketDay: ', cheapTicketDay);
+};
+
 
 // Обработчики событий
 inputCitiesFrom.addEventListener('input', () => {
@@ -80,6 +103,44 @@ dropdownCitiesTo.addEventListener('click', (event) => {
   selectCity(event, inputCitiesTo, dropdownCitiesTo);
 });
 
+formSearch.addEventListener('submit',(event) => {
+  event.preventDefault();
+
+  const cityFrom = city.find((item) => {
+    return inputCitiesFrom.value === item.name
+  });
+
+  const cityTo = city.find((item) => {
+    return inputCitiesTo.value === item.name
+  });
+
+  const formData = {
+    from: cityFrom.code,
+    to: cityTo.code,
+    when: inputDateDepart.value,
+  };
+
+  const requestData = `?depart_date=${formData.when}&origin=${formData.from}` +
+    `&destination=${formData.to}&one_way=true`;
+
+  // const requestData2 = '?depart_date=' + formData.when + 
+  //       '&origin=' + formData.from +
+  //       '&destination=' + formData.to +
+  //       '&one_way=true'; 
+          //'&one_way=true&token=' + API_KEY;
+
+
+  // getData(proxy + calendar + requestData, (response) => {
+  //   console.log(response);
+  // });
+
+  getData(calendar + requestData, (data) => {
+    renderCheap(data, formData.when);
+  });
+
+
+});
+
 // Вызовы функций
 
 getData(proxy + citiesApi, (data) => {
@@ -90,6 +151,8 @@ getData(proxy + citiesApi, (data) => {
 });
 
 
+
+// getData(proxy + calendar + '?depart_date=2020-05-25&origin=', (data) => {
+//   city = JSON.parse(data).filter(item => item.name);
+// });
 // http://min-prices.aviasales.ru/calendar_preload
-
-
