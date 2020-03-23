@@ -21,6 +21,8 @@ let city = [];
 // Функции
 
 const getData = (url, callBack, reject = console.error) => {
+
+
   const request = new XMLHttpRequest();
 
   request.open('GET', url);
@@ -33,9 +35,9 @@ const getData = (url, callBack, reject = console.error) => {
     } else {
       reject(request.status);
     }
-  });
-
-  request.send();
+  });  
+    request.send();   
+   
 };
 
 
@@ -183,7 +185,7 @@ const renderCheapYear = (cheapTickets) => {
     const ticket = createCard(cheapTickets[i]);
     otherCheapTickets.append(ticket);
   }
-  console.log(cheapTickets);
+  //console.log(cheapTickets);
 };
 
 const renderCheap = (data, date) => {
@@ -223,6 +225,8 @@ formSearch.addEventListener('submit',(event) => {
   // cheapestTicket.innerHTML('beforeend', '<h2>Самый дешевый билет на выбранную дату</h2>');
   // otherCheapTickets.innerHTML('beforeend', '<h2>Самые дешевые билеты на выбранную дату</h2>');
 
+  //debugger;
+
   const cityFrom = city.find((item) => {
     return inputCitiesFrom.value === item.name
   });
@@ -245,6 +249,9 @@ formSearch.addEventListener('submit',(event) => {
   
     getData(calendar + requestData, (data) => {
       renderCheap(data, formData.when);
+    }, error => {
+      alert('В этом направлении нет рейсов');
+      console.error('Error: ', error);
     });
   
   } else {
@@ -267,7 +274,7 @@ getData(proxy + citiesApi, (data) => {
     }
     return 0;
   });
-  console.log(city);
+  //console.log(city);
 
 });
 
